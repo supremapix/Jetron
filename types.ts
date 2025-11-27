@@ -1,3 +1,4 @@
+
 export interface FAQItem {
   question: string;
   answer: string;
@@ -9,7 +10,7 @@ export interface ServiceOption {
   description: string;
   longDescription?: string; // Descrição detalhada para a página de serviço
   category: 'macbook' | 'notebook' | 'iphone';
-  image: string;
+  iconKey: string; // Mudança de 'image' para 'iconKey'
   features: string[];
   startingPrice?: number; // Preço estimado ou "A partir de"
   badge?: string; // Tag para "Premium" ou "Especializado"

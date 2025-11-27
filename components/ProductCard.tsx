@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowRight, Star, Share2, Check, Info } from 'lucide-react';
+import { ArrowRight, Star, Share2, Check, Info, Cpu, Droplets, Monitor, Keyboard, Smartphone, ScanFace, Battery, Hammer, CircuitBoard, HardDrive } from 'lucide-react';
 import { ServiceOption } from '../types';
 
 interface ServiceCardProps {
@@ -9,16 +9,26 @@ interface ServiceCardProps {
   onNavigate?: (serviceId: string) => void;
 }
 
+const ICON_MAP: Record<string, React.ReactNode> = {
+  'cpu': <Cpu className="w-12 h-12" />,
+  'droplets': <Droplets className="w-12 h-12" />,
+  'monitor': <Monitor className="w-12 h-12" />,
+  'keyboard': <Keyboard className="w-12 h-12" />,
+  'smartphone': <Smartphone className="w-12 h-12" />,
+  'scan-face': <ScanFace className="w-12 h-12" />,
+  'battery': <Battery className="w-12 h-12" />,
+  'hammer': <Hammer className="w-12 h-12" />,
+  'circuit-board': <CircuitBoard className="w-12 h-12" />,
+  'hard-drive': <HardDrive className="w-12 h-12" />,
+  'wrench': <Hammer className="w-12 h-12" /> // Fallback or duplicate
+};
+
 export const ProductCard: React.FC<ServiceCardProps> = ({ service, onSelect, onNavigate }) => {
   const [copied, setCopied] = useState(false);
-  const [imgError, setImgError] = useState(false);
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    // Gerar link direto para o serviço
     const serviceUrl = `${window.location.origin}/?service=${service.id}`;
-
     const shareData = {
       title: `Jetron - ${service.name}`,
       text: `Confira este serviço especializado na Jetron: ${service.name}. ${service.description}`,
@@ -29,15 +39,16 @@ export const ProductCard: React.FC<ServiceCardProps> = ({ service, onSelect, onN
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
-        // Fallback para Desktop
         await navigator.clipboard.writeText(`${shareData.text} \n${shareData.url}`);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       }
     } catch (err) {
-      console.log('Erro ao compartilhar ou cancelado pelo usuário');
+      console.log('Erro ao compartilhar');
     }
   };
+
+  const IconComponent = ICON_MAP[service.iconKey] || <Cpu className="w-12 h-12" />;
 
   return (
     <div className="group bg-white rounded-2xl border border-gray-100 hover:border-red-600 shadow-sm hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300 overflow-hidden flex flex-col h-full relative">
@@ -55,14 +66,11 @@ export const ProductCard: React.FC<ServiceCardProps> = ({ service, onSelect, onN
         </div>
       )}
 
-      <div className="relative pt-[60%] overflow-hidden bg-gray-100">
-        <img 
-          src={imgError ? "https://images.unsplash.com/photo-1550041473-d296a1a8a1fa?auto=format&fit=crop&q=80&w=800" : service.image}
-          alt={`${service.name} em Curitiba - Jetron Assistência Técnica`}
-          onError={() => setImgError(true)}
-          className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0"
-        />
-        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+      {/* Icon Header Background */}
+      <div className="relative pt-[50%] overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100 group-hover:from-red-50 group-hover:to-red-100 transition-colors duration-500 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center text-gray-400 group-hover:text-red-600 transition-all duration-500 transform group-hover:scale-110">
+           {IconComponent}
+        </div>
       </div>
 
       <div className="p-6 flex-1 flex flex-col">

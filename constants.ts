@@ -54,7 +54,7 @@ export const SERVICES: ServiceOption[] = [
       
       Utilizamos equipamentos de ponta, microscópios de alta precisão e soldas de liga premium para garantir que o reparo seja duradouro e confiável. Somos referência em **reparo de placa Apple no Paraná**.
     `,
-    image: 'https://images.unsplash.com/photo-1550041473-d296a1a8a1fa?auto=format&fit=crop&q=80&w=800', // SOLDERING / LOGIC BOARD REPAIR
+    iconKey: 'cpu',
     features: ['Reballing BGA Certificado', 'Recuperação de Chip T2', 'Microscopia Avançada', 'Garantia de 6 meses'],
     startingPrice: 480.00,
     badge: 'Especializado',
@@ -86,7 +86,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Desoxidação (Banho Químico)',
     category: 'macbook',
     description: 'Caiu água, café ou líquido no MacBook? Desligue imediatamente e traga para nós. Realizamos limpeza ultrassônica para evitar corrosão da placa.',
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800', // COMPLEX CIRCUIT / SAVING BOARD
+    iconKey: 'droplets',
     features: ['Limpeza Ultrassônica', 'Prevenção de curto', 'Recuperação de dados'],
   },
   {
@@ -94,7 +94,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Troca de Tela / Flexgate',
     category: 'macbook',
     description: 'Reparo de falhas na iluminação (Flexgate) ou troca completa do display retina quebrado.',
-    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=800', // MACBOOK SCREEN GLOW
+    iconKey: 'monitor',
     features: ['Peças Originais', 'Ajuste de dobradiça', 'Preservação do True Tone'],
   },
   {
@@ -102,7 +102,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Teclado e Topcase',
     category: 'macbook',
     description: 'Teclas colando ou repetindo? Trocamos apenas o teclado ou o topcase completo (alumínio + bateria) para deixar seu Mac novo.',
-    image: 'https://images.unsplash.com/photo-1587829741301-dc798b91a603?auto=format&fit=crop&q=80&w=800', // MACBOOK KEYBOARD
+    iconKey: 'keyboard',
     features: ['Padrão ABNT2 ou US', 'Limpeza interna inclusa', 'Ajuste de trackpad'],
   },
   
@@ -112,7 +112,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Troca de Vidro (Refurb)',
     category: 'iphone',
     description: 'O display funciona e o touch está ok? Trocamos apenas o vidro quebrado. Mantém sua tela Original Apple e economiza até 50%.',
-    image: 'https://images.unsplash.com/photo-1627964551608-f421f5cb98be?auto=format&fit=crop&q=80&w=800',
+    iconKey: 'smartphone',
     features: ['Mantém Display Original', 'Sem erro de peça', 'Vidro temperado de brinde'],
     startingPrice: 250.00
   },
@@ -121,7 +121,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Reparo de Face ID',
     category: 'iphone',
     description: 'Seu iPhone avisa "Face ID indisponível" ou não foca no modo retrato? Reparamos o módulo TrueDepth sem perder a segurança.',
-    image: 'https://images.unsplash.com/photo-1605236453806-6ff36851218e?auto=format&fit=crop&q=80&w=800',
+    iconKey: 'scan-face',
     features: ['Micro soldagem', 'Calibração de sensores', 'Garantia estendida'],
     badge: 'Premium'
   },
@@ -130,7 +130,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Troca de Bateria Premium',
     category: 'iphone',
     description: 'Bateria inchada ou durando pouco? Instalamos baterias de alta performance com reprogramação da saúde (porcentagem) no sistema.',
-    image: 'https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&q=80&w=800',
+    iconKey: 'battery',
     features: ['Saúde em 100%', 'Vedação IP68 refeita', 'Transplante de BMS'],
   },
   {
@@ -138,7 +138,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Troca de Tampa Traseira',
     category: 'iphone',
     description: 'Vidro traseiro quebrado? Utilizamos máquina à laser para remover o vidro antigo sem precisar abrir todo o aparelho.',
-    image: 'https://images.unsplash.com/photo-1512054502232-1202b662523b?auto=format&fit=crop&q=80&w=800', // IPHONE BACK VIEW
+    iconKey: 'hammer',
     features: ['Tecnologia Laser', 'Acabamento perfeito', 'Mantém carregamento sem fio'],
   },
 
@@ -148,7 +148,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Reconstrução de Carcaça',
     category: 'notebook',
     description: 'Dobradiça quebrou ou a carcaça abriu? Fazemos a reconstrução estrutural com resina industrial e pintura original.',
-    image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=800',
+    iconKey: 'wrench',
     features: ['Mais resistente que novo', 'Ajuste de pressão', 'Estética original'],
     startingPrice: 180.00
   },
@@ -170,7 +170,7 @@ export const SERVICES: ServiceOption[] = [
       
       Traga seu notebook para a Jetron no Prado Velho para um diagnóstico preciso.
     `,
-    image: 'https://images.unsplash.com/photo-1555664424-778a696335b5?auto=format&fit=crop&q=80&w=800',
+    iconKey: 'circuit-board',
     features: ['Análise térmica', 'Componentes novos', 'Teste de estresse 24h'],
     badge: 'Especializado'
   },
@@ -179,7 +179,7 @@ export const SERVICES: ServiceOption[] = [
     name: 'Upgrade SSD NVMe + RAM',
     category: 'notebook',
     description: 'Seu notebook está lento? A instalação de um SSD NVMe pode deixá-lo até 10x mais rápido que o HD tradicional.',
-    image: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&q=80&w=800', // RAM Memory
+    iconKey: 'hard-drive',
     features: ['Clonagem de sistema', 'Windows Original', 'Limpeza interna inclusa'],
     startingPrice: 250.00
   }

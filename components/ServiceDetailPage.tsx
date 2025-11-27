@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { ServiceOption } from '../types';
-import { ArrowLeft, CheckCircle2, MessageCircle, ChevronDown, Wrench, ShieldCheck, MapPin } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, MessageCircle, ChevronDown, Wrench, ShieldCheck, MapPin, Cpu, Droplets, Monitor, Keyboard, Smartphone, ScanFace, Battery, Hammer, CircuitBoard, HardDrive } from 'lucide-react';
 
 interface ServiceDetailPageProps {
   service: ServiceOption;
@@ -8,10 +9,26 @@ interface ServiceDetailPageProps {
   onBack: () => void;
 }
 
+const ICON_MAP: Record<string, React.ReactNode> = {
+    'cpu': <Cpu className="w-32 h-32 opacity-20" />,
+    'droplets': <Droplets className="w-32 h-32 opacity-20" />,
+    'monitor': <Monitor className="w-32 h-32 opacity-20" />,
+    'keyboard': <Keyboard className="w-32 h-32 opacity-20" />,
+    'smartphone': <Smartphone className="w-32 h-32 opacity-20" />,
+    'scan-face': <ScanFace className="w-32 h-32 opacity-20" />,
+    'battery': <Battery className="w-32 h-32 opacity-20" />,
+    'hammer': <Hammer className="w-32 h-32 opacity-20" />,
+    'circuit-board': <CircuitBoard className="w-32 h-32 opacity-20" />,
+    'hard-drive': <HardDrive className="w-32 h-32 opacity-20" />,
+    'wrench': <Hammer className="w-32 h-32 opacity-20" />
+};
+
 export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onOpenQuote, onBack }) => {
   const pageTitle = `${service.name} - Assistência Técnica Jetron em Curitiba`;
   const pageDescription = `Serviço especializado de ${service.name}. ${service.description} Laboratório próprio anexo à PUC PR.`;
   const canonicalUrl = `https://jetron.com.br/?service=${service.id}`;
+
+  const HeaderIcon = ICON_MAP[service.iconKey] || <Cpu className="w-32 h-32 opacity-20" />;
 
   useEffect(() => {
     // SEO: Title, Meta Description, Canonical
@@ -94,13 +111,17 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
   return (
     <div className="bg-white min-h-screen animate-in fade-in duration-300">
       
-      {/* Hero Header */}
-      <div className="relative h-[400px] w-full bg-black overflow-hidden">
-        <div className="absolute inset-0 opacity-50">
-            <img src={service.image} alt={service.name} className="w-full h-full object-cover" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+      {/* Abstract Gradient Header */}
+      <div className="relative h-[400px] w-full bg-zinc-900 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-red-900/40"></div>
+        {/* Abstract Pattern */}
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
         
+        {/* Giant Background Icon */}
+        <div className="absolute right-10 top-1/2 -translate-y-1/2 text-white transform rotate-12">
+            {HeaderIcon}
+        </div>
+
         <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-12">
             <button 
                 onClick={onBack}

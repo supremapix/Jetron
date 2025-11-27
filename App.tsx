@@ -8,10 +8,24 @@ import { Footer } from './components/Footer';
 import { FloatingControls } from './components/FloatingControls';
 import { SERVICES, ALL_LOCATIONS, BLOG_POSTS } from './constants';
 import { ServiceOption } from './types';
-import { Filter, Check, ArrowRight, PlayCircle, MapPin, X, Lightbulb } from 'lucide-react';
+import { Filter, Check, ArrowRight, PlayCircle, MapPin, X, Lightbulb, Cpu, Droplets, Monitor, Keyboard, Smartphone, ScanFace, Battery, Hammer, CircuitBoard, HardDrive } from 'lucide-react';
 import { LocationPage } from './components/LocationPage';
 import { ServiceDetailPage } from './components/ServiceDetailPage';
 import { SitemapPage } from './components/SitemapPage';
+
+const ICON_COMPONENTS: Record<string, React.ElementType> = {
+  'cpu': Cpu,
+  'droplets': Droplets,
+  'monitor': Monitor,
+  'keyboard': Keyboard,
+  'smartphone': Smartphone,
+  'scan-face': ScanFace,
+  'battery': Battery,
+  'hammer': Hammer,
+  'circuit-board': CircuitBoard,
+  'hard-drive': HardDrive,
+  'wrench': Hammer
+};
 
 const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -329,8 +343,13 @@ const App: React.FC = () => {
                 {!quoteSent ? (
                     <form onSubmit={handleSubmitQuote} className="space-y-6">
                         {selectedService && (
-                            <div className="bg-red-50 border border-red-100 rounded-xl p-4 flex items-start gap-4">
-                                <img src={selectedService.image} alt="" className="w-16 h-16 object-cover rounded-lg" />
+                            <div className="bg-red-50 border border-red-100 rounded-xl p-4 flex items-center gap-4">
+                                <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm border border-red-100">
+                                   {(() => {
+                                      const Icon = ICON_COMPONENTS[selectedService.iconKey] || Cpu;
+                                      return <Icon className="w-8 h-8 text-red-600" />;
+                                   })()}
+                                </div>
                                 <div>
                                     <p className="text-xs text-red-600 font-bold uppercase mb-1">Serviço Selecionado</p>
                                     <h4 className="font-bold text-slate-900 text-sm">{selectedService.name}</h4>
