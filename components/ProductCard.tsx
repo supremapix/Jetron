@@ -1,0 +1,130 @@
+
+import React, { useState } from 'react';
+import { ArrowRight, Star, Share2, Check, Info } from 'lucide-react';
+import { ServiceOption } from '../types';
+
+interface ServiceCardProps {
+  service: ServiceOption;
+  onSelect: (service: ServiceOption) => void;
+  onNavigate?: (serviceId: string) => void;
+}
+
+export const ProductCard: React.FC<ServiceCardProps> = ({ service, onSelect, onNavigate }) => {
+  const [copied, setCopied] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Gerar link direto para o serviço
+    const serviceUrl = `${window.location.origin}/?service=${service.id}`;
+
+    const shareData = {
+      title: `Jetron - ${service.name}`,
+      text: `Confira este serviço especializado na Jetron: ${service.name}. ${service.description}`,
+      url: serviceUrl
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback para Desktop
+        await navigator.clipboard.writeText(`${shareData.text} \n${shareData.url}`);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (err) {
+      console.log('Erro ao compartilhar ou cancelado pelo usuário');
+    }
+  };
+
+  return (
+    <div className="group bg-white rounded-2xl border border-gray-100 hover:border-red-600 shadow-sm hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300 overflow-hidden flex flex-col h-full relative">
+      
+      {/* Category Tag */}
+      <div className="absolute top-4 left-4 bg-black/90 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full z-10 uppercase tracking-wider shadow-sm border border-zinc-800">
+        {service.category}
+      </div>
+
+      {/* Premium/Especializado Badge */}
+      {service.badge && (
+        <div className="absolute top-4 right-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-full z-10 uppercase tracking-wider shadow-md flex items-center gap-1">
+          <Star className="w-3 h-3 fill-white" />
+          {service.badge}
+        </div>
+      )}
+
+      <div className="relative pt-[60%] overflow-hidden bg-gray-100">
+        <img 
+          src={imgError ? "https://images.unsplash.com/photo-1550041473-d296a1a8a1fa?auto=format&fit=crop&q=80&w=800" : service.image}
+          alt={`${service.name} em Curitiba - Jetron Assistência Técnica`}
+          onError={() => setImgError(true)}
+          className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0"
+        />
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+      </div>
+
+      <div className="p-6 flex-1 flex flex-col">
+        <h3 className="text-lg font-bold text-slate-900 mb-2 leading-tight group-hover:text-red-600 transition-colors cursor-pointer" onClick={() => onNavigate && onNavigate(service.id)}>
+          {service.name}
+        </h3>
+        
+        <p className="text-sm text-gray-500 mb-4 line-clamp-3">
+            {service.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-6 mt-auto">
+            {service.features.slice(0, 3).map((feature, idx) => (
+                <span key={idx} className="text-[10px] bg-red-50 text-red-700 px-2 py-1 rounded-md font-medium border border-red-100">
+                    {feature}
+                </span>
+            ))}
+        </div>
+
+        <div className="pt-4 border-t border-gray-100 flex items-center justify-between gap-2">
+            <div className="flex-1">
+                <span className="text-xs text-gray-400 block">Investimento estimado</span>
+                <span className="text-sm font-bold text-slate-700">
+                    {service.startingPrice 
+                        ? `A partir de R$ ${service.startingPrice.toFixed(0)}` 
+                        : 'Sob Consulta'}
+                </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+                <button 
+                    onClick={handleShare}
+                    className={`p-2.5 rounded-lg transition-all duration-200 border ${
+                        copied 
+                        ? 'bg-green-50 text-green-600 border-green-200' 
+                        : 'bg-white text-gray-400 border-gray-200 hover:text-red-600 hover:border-red-200'
+                    }`}
+                    title={copied ? "Link copiado!" : "Compartilhar Serviço"}
+                >
+                    {copied ? <Check className="w-5 h-5" /> : <Share2 className="w-5 h-5" />}
+                </button>
+                
+                {onNavigate && (
+                    <button 
+                        onClick={() => onNavigate(service.id)}
+                        className="p-2.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                        title="Ver Detalhes e FAQ"
+                    >
+                        <Info className="w-5 h-5" />
+                    </button>
+                )}
+
+                <button 
+                    onClick={() => onSelect(service)}
+                    className="bg-black hover:bg-red-600 text-white rounded-lg p-2.5 transition-colors shadow-lg shadow-black/10 border border-transparent"
+                    title="Solicitar Orçamento"
+                >
+                    <ArrowRight className="w-5 h-5" />
+                </button>
+            </div>
+        </div>
+      </div>
+    </div>
+  );
+};
