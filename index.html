@@ -89,6 +89,15 @@
         animation: heartbeat 1.5s infinite;
         display: inline-block;
       }
+      #global-error {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: #fff;
+        z-index: 9999;
+        padding: 2rem;
+        text-align: center;
+      }
     </style>
   <script type="importmap">
 {
@@ -103,6 +112,48 @@
 </script>
 </head>
   <body class="bg-gray-50 text-slate-900 antialiased">
-    <div id="root"></div>
+    <div id="root">
+        <div style="height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #dc2626; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <p style="margin-top: 20px; color: #666; font-family: sans-serif;">Carregando Jetron...</p>
+        </div>
+        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+    </div>
+    
+    <div id="global-error">
+        <h2 style="color: #dc2626; font-size: 24px; margin-bottom: 10px;">Ops! O site não carregou.</h2>
+        <p style="color: #666; margin-bottom: 20px;">Isso pode ser um bloqueio de script ou erro de conexão.</p>
+        <button onclick="window.location.reload()" style="background: #000; color: #fff; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Tentar Novamente</button>
+        <p id="error-details" style="margin-top: 20px; font-size: 12px; color: #999; font-family: monospace; text-align: left; background: #f5f5f5; padding: 10px; border-radius: 4px; overflow: auto;"></p>
+    </div>
+
+    <script>
+        window.addEventListener('error', function(event) {
+            const errorBox = document.getElementById('global-error');
+            const details = document.getElementById('error-details');
+            if (document.getElementById('root').childElementCount <= 1) { // If root is still empty/loading
+                // Don't show immediately, wait a bit
+            }
+            console.error("Global Error Caught:", event.error);
+        });
+
+        // Fallback if React doesn't mount in 4 seconds
+        setTimeout(() => {
+            const root = document.getElementById('root');
+            // Check if React mounted (usually root has specific children or attributes, but checking innerHTML change is basic)
+            if (root.innerHTML.includes('Carregando Jetron')) {
+                const errorBox = document.getElementById('global-error');
+                const details = document.getElementById('error-details');
+                errorBox.style.display = 'flex';
+                errorBox.style.flexDirection = 'column';
+                errorBox.style.alignItems = 'center';
+                errorBox.style.justifyContent = 'center';
+                details.innerText = "Timeout: A aplicação não inicializou.\nVerifique se o JavaScript está habilitado.\nSe você usa bloqueadores de anúncio, tente desativar.";
+            }
+        }, 4000);
+    </script>
+    
+    <!-- CRITICAL ENTRY POINT -->
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
