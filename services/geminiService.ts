@@ -19,7 +19,6 @@ export const sendMessageToGemini = async (history: ChatMessage[], newMessage: st
       
       INFORMAÇÕES CRUCIAIS DA LOJA:
       - Endereço: Anexo a PUC - Portão 2 (Rua Imaculada Conceição, 764, Prado Velho, Curitiba, PR).
-      - Telefone Fixo: (41) 3018-0964
       - WhatsApp/Celular: (41) 99938-3882
       - E-mail: jetron.reballing@gmail.com
       
@@ -52,7 +51,12 @@ export const sendMessageToGemini = async (history: ChatMessage[], newMessage: st
     });
 
     const result = await chat.sendMessage({ message: newMessage });
-    return result.text || "Desculpe, poderia repetir o sintoma do aparelho?";
+    // Ensure we always return a non-empty string, never an object, null, or undefined
+    const responseText = result.text;
+    if (typeof responseText === 'string' && responseText.trim()) {
+      return responseText;
+    }
+    return "Desculpe, poderia repetir o sintoma do aparelho?";
   } catch (error) {
     console.error("Gemini Error:", error);
     return "Estou reconectando com o servidor. Por favor, tente novamente em alguns instantes.";

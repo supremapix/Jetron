@@ -39,7 +39,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({ locationName, onOpen
       "@type": "LocalBusiness",
       "name": "Jetron Assistência Técnica",
       "image": "https://jetron.com.br/logo.png",
-      "telephone": "(41) 3018-0964",
+      "telephone": "(41) 99938-3882",
       "email": "jetron.reballing@gmail.com",
       "address": {
         "@type": "PostalAddress",

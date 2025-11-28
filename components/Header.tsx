@@ -29,7 +29,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenQuote, selectedCategory, o
             </p>
             <div className="hidden sm:flex gap-6">
                 <span className="flex items-center gap-1.5 hover:text-white transition-colors"><MapPin className="w-3 h-3 text-red-600" /> Curitiba, PR</span>
-                <span className="flex items-center gap-1.5 hover:text-white transition-colors"><Phone className="w-3 h-3 text-red-600" /> (41) 3018-0964</span>
             </div>
         </div>
       </div>

@@ -81,7 +81,7 @@ export const ChatAssistant: React.FC = () => {
                       : 'bg-white border border-gray-200 text-gray-800 rounded-tl-none shadow-sm'
                   }`}
                 >
-                  {msg.text}
+                  {typeof msg.text === 'string' ? msg.text : String(msg.text)}
                 </div>
               </div>
             ))}
