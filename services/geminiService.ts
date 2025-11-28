@@ -52,9 +52,9 @@ export const sendMessageToGemini = async (history: ChatMessage[], newMessage: st
     });
 
     const result = await chat.sendMessage({ message: newMessage });
-    // Ensure we always return a string, never an object
+    // Ensure we always return a non-empty string, never an object, null, or undefined
     const responseText = result.text;
-    if (typeof responseText === 'string') {
+    if (typeof responseText === 'string' && responseText.trim()) {
       return responseText;
     }
     return "Desculpe, poderia repetir o sintoma do aparelho?";
