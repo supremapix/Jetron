@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowUp, Phone, MessageCircle, MapPin } from 'lucide-react';
+import { ArrowUp, MessageCircle, MapPin } from 'lucide-react';
 
 export const FloatingControls: React.FC = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -26,11 +26,11 @@ export const FloatingControls: React.FC = () => {
     <>
       {/* --- Floating Contacts (Left Side) --- */}
       <div className="fixed left-4 bottom-6 z-40 flex flex-col gap-3">
-        
+
         {/* WhatsApp */}
-        <a 
-          href="https://wa.me/5541999383882" 
-          target="_blank" 
+        <a
+          href="https://wa.me/5541999383882?text=Ol%C3%A1%21%20Entrei%20em%20contato%20atrav%C3%A9s%20do%20bot%C3%A3o%20flutuante%20do%20site."
+          target="_blank"
           rel="noreferrer"
           className="group relative flex items-center justify-center w-12 h-12 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg shadow-green-900/30 transition-all duration-300 hover:scale-110"
           aria-label="Falar no WhatsApp"
@@ -38,26 +38,14 @@ export const FloatingControls: React.FC = () => {
           <MessageCircle className="w-6 h-6" />
           {/* Tooltip */}
           <span className="absolute left-14 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-gray-700">
-            WhatsApp Rápido
-          </span>
-        </a>
-
-        {/* Phone */}
-        <a 
-          href="tel:4130180964" 
-          className="group relative flex items-center justify-center w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg shadow-blue-900/30 transition-all duration-300 hover:scale-110"
-          aria-label="Ligar Agora"
-        >
-          <Phone className="w-5 h-5" />
-          <span className="absolute left-14 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-gray-700">
-            Ligar (41) 3018-0964
+            WhatsApp - Flutuante
           </span>
         </a>
 
         {/* Maps */}
-        <a 
-          href="https://maps.google.com/?q=Rua+Imaculada+Conceição,+764,+Prado+Velho,+Curitiba" 
-          target="_blank" 
+        <a
+          href="https://maps.google.com/?q=Rua+Imaculada+Conceição,+764,+Prado+Velho,+Curitiba"
+          target="_blank"
           rel="noreferrer"
           className="group relative flex items-center justify-center w-12 h-12 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg shadow-red-900/30 transition-all duration-300 hover:scale-110"
           aria-label="Como Chegar"

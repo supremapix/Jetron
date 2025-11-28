@@ -150,7 +150,14 @@ const App: React.FC = () => {
 
   const handleSubmitQuote = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate API call
+
+    const origin = selectedService ? `Serviço: ${selectedService.name}` : 'Página inicial';
+    const message = `Olá! Meu nome é ${quoteForm.name}\n\nOrigem do contato: ${origin}\n\nWhatsApp: ${quoteForm.phone}\n\nDescrição do problema:\n${quoteForm.description}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/5541999383882?text=${encodedMessage}`;
+
+    window.open(whatsappUrl, '_blank');
+
     setTimeout(() => {
         setQuoteSent(true);
         setTimeout(() => {
@@ -158,7 +165,7 @@ const App: React.FC = () => {
             setQuoteForm({ name: '', phone: '', description: '' });
             setSelectedService(null);
         }, 3000);
-    }, 1000);
+    }, 500);
   };
 
   const activeService = currentServiceId ? SERVICES.find(s => s.id === currentServiceId) : null;

@@ -66,11 +66,19 @@ export const ProductCard: React.FC<ServiceCardProps> = ({ service, onSelect, onN
         </div>
       )}
 
-      {/* Icon Header Background */}
-      <div className="relative pt-[50%] overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100 group-hover:from-red-50 group-hover:to-red-100 transition-colors duration-500 flex items-center justify-center">
-        <div className="absolute inset-0 flex items-center justify-center text-gray-400 group-hover:text-red-600 transition-all duration-500 transform group-hover:scale-110">
-           {IconComponent}
-        </div>
+      {/* Image Header */}
+      <div className="relative w-full h-48 overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100">
+        {service.image ? (
+          <img
+            src={service.image}
+            alt={service.name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400 group-hover:text-red-600 transition-all">
+            {IconComponent}
+          </div>
+        )}
       </div>
 
       <div className="p-6 flex-1 flex flex-col">
