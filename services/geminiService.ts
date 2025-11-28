@@ -52,7 +52,12 @@ export const sendMessageToGemini = async (history: ChatMessage[], newMessage: st
     });
 
     const result = await chat.sendMessage({ message: newMessage });
-    return result.text || "Desculpe, poderia repetir o sintoma do aparelho?";
+    // Ensure we always return a string, never an object
+    const responseText = result.text;
+    if (typeof responseText === 'string') {
+      return responseText;
+    }
+    return "Desculpe, poderia repetir o sintoma do aparelho?";
   } catch (error) {
     console.error("Gemini Error:", error);
     return "Estou reconectando com o servidor. Por favor, tente novamente em alguns instantes.";
