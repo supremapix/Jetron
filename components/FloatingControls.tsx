@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowUp, Phone, MessageCircle, MapPin } from 'lucide-react';
+import { ArrowUp, MessageCircle, MapPin } from 'lucide-react';
 
 export const FloatingControls: React.FC = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -39,18 +39,6 @@ export const FloatingControls: React.FC = () => {
           {/* Tooltip */}
           <span className="absolute left-14 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-gray-700">
             WhatsApp Rápido
-          </span>
-        </a>
-
-        {/* Phone */}
-        <a 
-          href="tel:4130180964" 
-          className="group relative flex items-center justify-center w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg shadow-blue-900/30 transition-all duration-300 hover:scale-110"
-          aria-label="Ligar Agora"
-        >
-          <Phone className="w-5 h-5" />
-          <span className="absolute left-14 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-gray-700">
-            Ligar (41) 3018-0964
           </span>
         </a>
 
