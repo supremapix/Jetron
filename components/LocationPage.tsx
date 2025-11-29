@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ShieldCheck, MapPin, Cpu, Smartphone, Laptop, Check, ArrowLeft } from 'lucide-react';
+import { EnhancedSEO } from './EnhancedSEO';
 
 interface LocationPageProps {
   locationName: string;
@@ -10,67 +11,45 @@ interface LocationPageProps {
 export const LocationPage: React.FC<LocationPageProps> = ({ locationName, onOpenQuote, onBack }) => {
   const pageTitle = `Assistência Técnica Apple e Notebook em ${locationName} | Jetron`;
   const pageDescription = `Procurando conserto de MacBook, iPhone ou Notebook em ${locationName}? A Jetron é especialista em reparo de placa lógica e microeletrônica. Atendemos toda região de ${locationName} com laboratório próprio.`;
-  const canonicalUrl = `https://jetron.com.br/?local=${encodeURIComponent(locationName.toLowerCase().replace(/ /g, '-'))}`;
+  const slug = encodeURIComponent(locationName.toLowerCase().replace(/ /g, '-'));
+  const path = `/?local=${slug}`;
 
-  useEffect(() => {
-    document.title = pageTitle;
-    
-    // Update Meta Description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute('content', pageDescription);
+  // Schema Markup
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Jetron Assistência Técnica",
+    "image": "https://jetron.com.br/logo.png",
+    "email": "jetron.reballing@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua Imaculada Conceição, 764",
+      "addressLocality": "Curitiba",
+      "addressRegion": "PR",
+      "postalCode": "80215-182",
+      "addressCountry": "BR"
+    },
+    "areaServed": {
+      "@type": "Place",
+      "name": locationName
+    },
+    "priceRange": "$$",
+    "description": pageDescription
+  };
 
-    // Update Canonical
-    let linkCanonical = document.querySelector('link[rel="canonical"]');
-    if (!linkCanonical) {
-      linkCanonical = document.createElement('link');
-      linkCanonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(linkCanonical);
-    }
-    linkCanonical.setAttribute('href', canonicalUrl);
-
-    // Schema Markup
-    const schemaData = {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "Jetron Assistência Técnica",
-      "image": "https://jetron.com.br/logo.png",
-      "telephone": "(41) 3018-0964",
-      "email": "jetron.reballing@gmail.com",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Rua Imaculada Conceição, 764",
-        "addressLocality": "Curitiba",
-        "addressRegion": "PR",
-        "postalCode": "80215-182",
-        "addressCountry": "BR"
-      },
-      "areaServed": {
-        "@type": "Place",
-        "name": locationName
-      },
-      "url": canonicalUrl,
-      "priceRange": "$$",
-      "description": pageDescription
-    };
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaData);
-    document.head.appendChild(script);
-
-    return () => {
-      // Cleanup happens but title/meta persistence is fine as next page overwrites or Home renders
-      document.title = "Jetron Tech - Especialistas em Apple & Notebooks";
-    };
-  }, [locationName, pageTitle, pageDescription, canonicalUrl]);
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.style.display = 'none'; // Esconde a imagem se quebrar
+  };
 
   return (
     <div className="bg-white font-sans animate-in fade-in duration-500">
+      <EnhancedSEO 
+        title={pageTitle}
+        description={pageDescription}
+        path={path}
+        schema={schemaData}
+      />
+
       {/* Hero Section for Location */}
       <div className="relative bg-black py-20 px-4 sm:px-6 lg:px-8 border-b border-zinc-800">
         
@@ -84,17 +63,22 @@ export const LocationPage: React.FC<LocationPageProps> = ({ locationName, onOpen
             </button>
         </div>
 
-        <div className="absolute inset-0 opacity-30">
-             <img src="https://images.unsplash.com/photo-1597872250976-f56565db99c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Placa Mãe" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 opacity-40">
+             <img 
+                src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920&auto=format&fit=crop" 
+                alt="Laboratório Jetron Tecnologia" 
+                className="w-full h-full object-cover" 
+                onError={handleImageError}
+             />
         </div>
         <div className="relative max-w-7xl mx-auto text-center pt-8">
-            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-red-900/40 border border-red-600/30 text-red-400 text-xs font-bold uppercase tracking-widest mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-red-900/60 border border-red-600/30 text-red-400 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md">
                 <MapPin className="w-3 h-3" /> Atendendo {locationName} e Região
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-white mb-6">
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg">
                 Assistência Técnica Especializada em <span className="text-red-600">{locationName}</span>
             </h1>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+            <p className="text-gray-300 max-w-2xl mx-auto text-lg drop-shadow-md font-medium">
                 Se você está em {locationName}, conte com a Jetron para reparos avançados em Apple e Notebooks. Qualidade de laboratório central com atendimento dedicado.
             </p>
             <div className="mt-8">
@@ -122,7 +106,12 @@ export const LocationPage: React.FC<LocationPageProps> = ({ locationName, onOpen
                     </p>
                 </div>
                 <div className="w-full md:w-1/3">
-                    <img src="https://images.unsplash.com/photo-1581092921461-eab62e97a782?auto=format&fit=crop&q=80&w=400" alt={`Assistência em ${locationName}`} className="rounded-xl shadow-lg w-full h-64 object-cover" />
+                    <img 
+                        src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=600&auto=format&fit=crop" 
+                        alt={`Técnico em eletrônica atendendo ${locationName}`} 
+                        className="rounded-xl shadow-lg w-full h-64 object-cover" 
+                        onError={handleImageError}
+                    />
                 </div>
             </div>
         </article>
@@ -144,7 +133,12 @@ export const LocationPage: React.FC<LocationPageProps> = ({ locationName, onOpen
                     </p>
                 </div>
                 <div className="w-full md:w-1/3">
-                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca4?auto=format&fit=crop&q=80&w=400" alt={`Conserto MacBook ${locationName}`} className="rounded-xl shadow-lg w-full h-64 object-cover" />
+                    <img 
+                        src="https://images.unsplash.com/photo-1531297461136-82lw9z1l3719?q=80&w=600&auto=format&fit=crop" 
+                        alt={`Conserto MacBook ${locationName}`} 
+                        className="rounded-xl shadow-lg w-full h-64 object-cover" 
+                        onError={handleImageError}
+                    />
                 </div>
             </div>
         </article>
@@ -157,7 +151,12 @@ export const LocationPage: React.FC<LocationPageProps> = ({ locationName, onOpen
                 <Smartphone className="text-red-600" /> Clínica do iPhone para {locationName}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <img src="https://images.unsplash.com/photo-1603539947679-0557e4e46048?auto=format&fit=crop&q=80&w=600" alt={`Reparo iPhone ${locationName}`} className="rounded-xl shadow-lg h-64 w-full object-cover" />
+                <img 
+                    src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?q=80&w=600&auto=format&fit=crop" 
+                    alt={`Reparo iPhone ${locationName}`} 
+                    className="rounded-xl shadow-lg h-64 w-full object-cover" 
+                    onError={handleImageError}
+                />
                 <div className="text-gray-600 space-y-4 text-justify">
                     <p>
                         Se o seu iPhone quebrou, não arrisque deixá-lo em qualquer lugar em <strong>{locationName}</strong>. A Jetron realiza a <strong>Troca de Vidro</strong> preservando o display original. Isso é fundamental para manter a qualidade de imagem Retina e a sensibilidade do toque original da Apple, algo que telas paralelas vendidas em {locationName} muitas vezes não oferecem.

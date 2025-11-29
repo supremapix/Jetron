@@ -1,7 +1,7 @@
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ServiceOption } from '../types';
 import { ArrowLeft, CheckCircle2, MessageCircle, ChevronDown, Wrench, ShieldCheck, MapPin, Cpu, Droplets, Monitor, Keyboard, Smartphone, ScanFace, Battery, Hammer, CircuitBoard, HardDrive } from 'lucide-react';
+import { EnhancedSEO } from './EnhancedSEO';
 
 interface ServiceDetailPageProps {
   service: ServiceOption;
@@ -26,91 +26,66 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onOpenQuote, onBack }) => {
   const pageTitle = `${service.name} - Assistência Técnica Jetron em Curitiba`;
   const pageDescription = `Serviço especializado de ${service.name}. ${service.description} Laboratório próprio anexo à PUC PR.`;
-  const canonicalUrl = `https://jetron.com.br/?service=${service.id}`;
+  const path = `/?service=${service.id}`;
 
   const HeaderIcon = ICON_MAP[service.iconKey] || <Cpu className="w-32 h-32 opacity-20" />;
 
-  useEffect(() => {
-    // SEO: Title, Meta Description, Canonical
-    document.title = pageTitle;
-    
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute('content', pageDescription);
-
-    let linkCanonical = document.querySelector('link[rel="canonical"]');
-    if (!linkCanonical) {
-      linkCanonical = document.createElement('link');
-      linkCanonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(linkCanonical);
-    }
-    linkCanonical.setAttribute('href', canonicalUrl);
-
-    // SEO: Schema Markup (Service + FAQPage)
-    const schemaData = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Service",
-          "name": service.name,
-          "provider": {
-            "@type": "LocalBusiness",
-            "name": "Jetron Assistência Técnica",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "Rua Imaculada Conceição, 764",
-              "addressLocality": "Curitiba",
-              "addressRegion": "PR"
-            }
-          },
-          "description": service.description,
-          "areaServed": "Curitiba",
-          "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Serviços de Reparo",
-            "itemListElement": [
-              {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": service.name
-                }
-              }
-            ]
-          }
+  // SEO: Schema Markup (Service + FAQPage)
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@graph": [
+    {
+        "@type": "Service",
+        "name": service.name,
+        "provider": {
+        "@type": "LocalBusiness",
+        "name": "Jetron Assistência Técnica",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Rua Imaculada Conceição, 764",
+            "addressLocality": "Curitiba",
+            "addressRegion": "PR"
+        }
         },
-        service.faq ? {
-          "@type": "FAQPage",
-          "mainEntity": service.faq.map(item => ({
-            "@type": "Question",
-            "name": item.question,
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": item.answer
+        "description": service.description,
+        "areaServed": "Curitiba",
+        "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Serviços de Reparo",
+        "itemListElement": [
+            {
+            "@type": "Offer",
+            "itemOffered": {
+                "@type": "Service",
+                "name": service.name
             }
-          }))
-        } : null
-      ].filter(Boolean)
-    };
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaData);
-    document.head.appendChild(script);
-
-    return () => {
-      // Cleanup happens naturally on route change
-      document.title = "Jetron Tech - Especialistas em Apple & Notebooks";
-    };
-  }, [service, pageTitle, pageDescription, canonicalUrl]);
+            }
+        ]
+        }
+    },
+    service.faq ? {
+        "@type": "FAQPage",
+        "mainEntity": service.faq.map(item => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": item.answer
+        }
+        }))
+    } : null
+    ].filter(Boolean)
+  };
 
   return (
     <div className="bg-white min-h-screen animate-in fade-in duration-300">
-      
+      <EnhancedSEO 
+        title={pageTitle}
+        description={pageDescription}
+        path={path}
+        schema={schemaData}
+      />
+
       {/* Abstract Gradient Header */}
       <div className="relative h-[400px] w-full bg-zinc-900 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-red-900/40"></div>

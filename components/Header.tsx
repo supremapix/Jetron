@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, MessageCircle, X, Wrench, MapPin, Cpu } from 'lucide-react';
+import { Menu, MessageCircle, X, Wrench, Smartphone, MapPin, Cpu } from 'lucide-react';
 
 interface HeaderProps {
   onOpenQuote: () => void;
@@ -29,6 +29,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenQuote, selectedCategory, o
             </p>
             <div className="hidden sm:flex gap-6">
                 <span className="flex items-center gap-1.5 hover:text-white transition-colors"><MapPin className="w-3 h-3 text-red-600" /> Curitiba, PR</span>
+                <span className="flex items-center gap-1.5 hover:text-white transition-colors"><Smartphone className="w-3 h-3 text-red-600" /> (41) 99938-3882</span>
             </div>
         </div>
       </div>

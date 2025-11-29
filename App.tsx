@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -8,10 +7,12 @@ import { Footer } from './components/Footer';
 import { FloatingControls } from './components/FloatingControls';
 import { SERVICES, ALL_LOCATIONS, BLOG_POSTS } from './constants';
 import { ServiceOption } from './types';
-import { Filter, Check, ArrowRight, PlayCircle, MapPin, X, Lightbulb, Cpu, Droplets, Monitor, Keyboard, Smartphone, ScanFace, Battery, Hammer, CircuitBoard, HardDrive } from 'lucide-react';
+import { Filter, Check, ArrowRight, Lightbulb, Cpu, Droplets, Monitor, Keyboard, Smartphone, ScanFace, Battery, Hammer, CircuitBoard, HardDrive, MapPin, X } from 'lucide-react';
 import { LocationPage } from './components/LocationPage';
 import { ServiceDetailPage } from './components/ServiceDetailPage';
 import { SitemapPage } from './components/SitemapPage';
+import { EnhancedSEO } from './components/EnhancedSEO';
+import { NotFoundPage } from './components/NotFoundPage';
 
 const ICON_COMPONENTS: Record<string, React.ElementType> = {
   'cpu': Cpu,
@@ -35,6 +36,7 @@ const App: React.FC = () => {
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
   const [currentServiceId, setCurrentServiceId] = useState<string | null>(null);
   const [isSitemap, setIsSitemap] = useState(false);
+  const [isNotFound, setIsNotFound] = useState(false);
   
   // Quote Modal State
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
@@ -56,41 +58,48 @@ const App: React.FC = () => {
       // Check for Location Param
       const local = params.get('local');
       if (local) {
-        const formattedLocal = decodeURIComponent(local).replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        setCurrentLocation(formattedLocal);
+        try {
+            // Normalize slug comparison
+            const slug = decodeURIComponent(local).toLowerCase();
+            const foundLocation = ALL_LOCATIONS.find(loc => 
+                loc.toLowerCase().replace(/ /g, '-') === slug
+            );
+
+            if (foundLocation) {
+                setCurrentLocation(foundLocation);
+            } else {
+                // If location doesn't exist in our constants
+                setIsNotFound(true);
+            }
+        } catch (e) {
+            setIsNotFound(true);
+        }
+        return;
       }
 
       // Check for Service Param
       const serviceId = params.get('service');
       if (serviceId) {
-          setCurrentServiceId(serviceId);
+          const foundService = SERVICES.find(s => s.id === serviceId);
+          if (foundService) {
+            setCurrentServiceId(serviceId);
+          } else {
+            setIsNotFound(true);
+          }
       }
     } catch (error) {
       console.error("URL Parsing Error:", error);
-      // Fallback to home if URL is malformed
-      window.history.replaceState({}, '', '/');
+      // If URL is completely malformed (URIError), fallback to home or 404
+      setIsNotFound(true);
     }
   }, []);
 
-  // Set Home Page Title when not in sub-routes
-  useEffect(() => {
-    if (!currentLocation && !currentServiceId && !isSitemap) {
-      document.title = "Jetron - Conserto de MacBook, iPhone e Notebook em Curitiba";
-      let metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', 'Jetron Assistência Técnica em Curitiba. Especialistas em conserto de MacBook, iPhone e Notebooks. Laboratório próprio de microeletrônica na PUC PR. Orçamento grátis.');
-      }
-      let linkCanonical = document.querySelector('link[rel="canonical"]');
-      if (linkCanonical) {
-        linkCanonical.setAttribute('href', 'https://jetron.com.br');
-      }
-    }
-  }, [currentLocation, currentServiceId, isSitemap]);
-
   // Client Side Navigation Handler
   const handleNavigate = (type: 'home' | 'location' | 'service' | 'sitemap', value: string | null) => {
+    // Reset 404 state
+    setIsNotFound(false);
+    
     // 1. FIRST: Update UI State (Critical Path)
-    // We update the state first so navigation works even if URL update fails
     if (type === 'location' && value) {
         setCurrentLocation(value);
         setCurrentServiceId(null);
@@ -114,7 +123,6 @@ const App: React.FC = () => {
     window.scrollTo(0, 0);
 
     // 2. SECOND: Attempt to Update URL (Progressive Enhancement)
-    // This is wrapped in try/catch because pushState is often blocked in iframe/blob previews
     try {
       if (type === 'location' && value) {
           const slug = encodeURIComponent(value.toLowerCase().replace(/ /g, '-'));
@@ -124,12 +132,10 @@ const App: React.FC = () => {
       } else if (type === 'sitemap') {
           window.history.pushState({}, '', '?page=sitemap');
       } else {
-          // Use pathname to be safer in nested paths, or fallback to root
-          const path = window.location.pathname || '/';
-          window.history.pushState({}, '', path);
+          // Fallback to root
+          window.history.pushState({}, '', '/');
       }
     } catch (e) {
-      // Silently ignore navigation errors in restricted environments
       console.debug("URL update skipped due to environment restrictions");
     }
   };
@@ -150,25 +156,85 @@ const App: React.FC = () => {
 
   const handleSubmitQuote = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Construct WhatsApp Message
+    const phoneNumber = "5541999383882";
+    let message = `*Solicitação de Orçamento via Site*\n\n`;
+    message += `*Nome:* ${quoteForm.name}\n`;
+    message += `*Telefone:* ${quoteForm.phone}\n`;
+    if (selectedService) {
+      message += `*Serviço de Interesse:* ${selectedService.name}\n`;
+    }
+    message += `*Descrição do Problema:* ${quoteForm.description}`;
 
-    const origin = selectedService ? `Serviço: ${selectedService.name}` : 'Página inicial';
-    const message = `Olá! Meu nome é ${quoteForm.name}\n\nOrigem do contato: ${origin}\n\nWhatsApp: ${quoteForm.phone}\n\nDescrição do problema:\n${quoteForm.description}`;
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/5541999383882?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
+    // Open WhatsApp in new tab
     window.open(whatsappUrl, '_blank');
 
+    // Show success feedback
+    setQuoteSent(true);
     setTimeout(() => {
-        setQuoteSent(true);
-        setTimeout(() => {
-            setIsQuoteOpen(false);
-            setQuoteForm({ name: '', phone: '', description: '' });
-            setSelectedService(null);
-        }, 3000);
-    }, 500);
+        setIsQuoteOpen(false);
+        setQuoteForm({ name: '', phone: '', description: '' });
+        setSelectedService(null);
+    }, 3000);
   };
 
   const activeService = currentServiceId ? SERVICES.find(s => s.id === currentServiceId) : null;
+
+  // Home Page Schema
+  const homeSchema = {
+    "@context": "https://schema.org",
+    "@type": "ComputerRepair",
+    "name": "Jetron Assistência Técnica",
+    "image": [
+      "https://jetron.com.br/logo.png"
+    ],
+    "@id": "https://jetron.com.br",
+    "url": "https://jetron.com.br",
+    "email": "jetron.reballing@gmail.com",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua Imaculada Conceição, 764 - Anexo a PUC (Portão 2)",
+      "addressLocality": "Curitiba",
+      "addressRegion": "PR",
+      "postalCode": "80215-182",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -25.4528,
+      "longitude": -49.2544
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "sameAs": [
+      "https://www.instagram.com/jetron",
+      "https://www.facebook.com/jetron"
+    ],
+    "areaServed": {
+      "@type": "City",
+      "name": "Curitiba"
+    },
+    "description": "A Jetron é especialista em conserto de MacBook, Notebook e iPhone em Curitiba. Laboratório próprio de microeletrônica, reballing e recuperação de placas."
+  };
+
+  // Render 404 Page if route not found
+  if (isNotFound) {
+      return <NotFoundPage onBack={() => handleNavigate('home', null)} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
@@ -201,6 +267,14 @@ const App: React.FC = () => {
             />
         ) : (
             <>
+                {/* Home SEO */}
+                <EnhancedSEO 
+                  title="Jetron - Conserto de MacBook, iPhone e Notebook em Curitiba"
+                  description="Jetron Assistência Técnica em Curitiba. Especialistas em conserto de MacBook, iPhone e Notebooks. Laboratório próprio de microeletrônica na PUC PR. Orçamento grátis."
+                  path="/"
+                  schema={homeSchema}
+                />
+
                 <Hero onOpenQuote={() => handleOpenQuote()} />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -403,7 +477,7 @@ const App: React.FC = () => {
                             <Check className="w-10 h-10 text-green-600" />
                         </div>
                         <h3 className="text-2xl font-bold text-slate-900 mb-2">Solicitação Enviada!</h3>
-                        <p className="text-gray-500 mb-8">Conte conosco na Jetron! Entraremos em contato em breve.</p>
+                        <p className="text-gray-500 mb-8">Redirecionando para o WhatsApp da Jetron...</p>
                         <button onClick={() => setIsQuoteOpen(false)} className="text-red-600 font-bold hover:underline">Voltar para o site</button>
                     </div>
                 )}

@@ -1,15 +1,29 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import './index.css';
+import { HelmetProvider } from 'react-helmet-async';
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
 
 // Error Boundary to catch runtime errors
-class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
-  constructor(props: { children: ReactNode }) {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = {
+      hasError: false,
+      error: null
+    };
   }
 
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
@@ -20,14 +34,14 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-          <div className="bg-white p-8 rounded-xl shadow-xl border border-red-100 max-w-lg w-full">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
+          <div className="bg-white p-8 rounded-xl shadow-xl border border-red-100 max-w-lg w-full text-center">
             <h2 className="text-2xl font-bold text-red-600 mb-4">Algo deu errado</h2>
-            <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar a aplicação. Por favor, tente recarregar a página.
+            <p className="text-gray-600 mb-6">
+              Ocorreu um erro inesperado ao carregar a aplicação.
             </p>
-            <div className="bg-gray-100 p-4 rounded-lg overflow-auto text-xs font-mono text-gray-800 mb-6 max-h-40">
-              {this.state.error?.toString()}
+            <div className="bg-gray-100 p-4 rounded-lg overflow-auto text-xs font-mono text-gray-800 mb-6 max-h-40 text-left">
+              {this.state.error?.message || "Erro desconhecido"}
             </div>
             <button 
               onClick={() => window.location.reload()}
@@ -44,6 +58,20 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   }
 }
 
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(
+      (registration) => {
+        console.log('ServiceWorker registration successful');
+      },
+      (err) => {
+        console.log('ServiceWorker registration failed: ', err);
+      }
+    );
+  });
+}
+
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Could not find root element to mount to");
@@ -52,8 +80,10 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    <HelmetProvider>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </HelmetProvider>
   </React.StrictMode>
 );

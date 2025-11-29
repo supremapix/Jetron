@@ -19,7 +19,6 @@ export const sendMessageToGemini = async (history: ChatMessage[], newMessage: st
       
       INFORMAÇÕES CRUCIAIS DA LOJA:
       - Endereço: Anexo a PUC - Portão 2 (Rua Imaculada Conceição, 764, Prado Velho, Curitiba, PR).
-      - Telefone Fixo: (41) 3018-0964
       - WhatsApp/Celular: (41) 99938-3882
       - E-mail: jetron.reballing@gmail.com
       

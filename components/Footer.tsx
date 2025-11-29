@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Smartphone, Navigation, Cpu, MessageCircle, ArrowRight } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Smartphone, Navigation, Cpu, MessageCircle, ArrowRight } from 'lucide-react';
 
 interface FooterProps {
   onOpenQuote: () => void;
@@ -35,14 +34,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenQuote }) => {
           <div>
             <h3 className="font-bold text-white mb-6 text-sm uppercase tracking-wider">Canais de Atendimento</h3>
             <ul className="space-y-6 text-sm text-gray-400">
-              <li className="flex flex-col gap-1 group cursor-pointer">
-                <span className="flex items-center gap-2 text-white font-bold group-hover:text-red-600 transition-colors">
-                  <Phone className="w-4 h-4" /> Telefone Fixo
-                </span>
-                <a href="tel:4130180964" className="hover:text-red-600 transition-colors block ml-6">
-                  (41) 3018-0964
-                </a>
-              </li>
               
               <li>
                  <a 
